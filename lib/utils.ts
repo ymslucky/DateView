@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getKVData = async (key: string) => {
-  const host = process.env.NEXT_PUBLIC_API_URL;
+  const host = process.env.NODE_ENV === 'development' ? 'http://localhost:8088' : '';
   const res = await fetch(`${host}/radar`);
   return res.json();
 }
