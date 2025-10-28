@@ -16,7 +16,25 @@ import {
 } from "@/components/ui/chart";
 import { TrendingDown } from "lucide-react";
 
-const chartData = [
+// 定义数据项的类型
+export interface ChartDataItem {
+  month: string;
+  desktop: number;
+  mobile: number;
+}
+
+// 定义组件props的接口
+export interface GlowingMultipleStrokeRadarChartProps {
+  data?: ChartDataItem[];
+  title?: string;
+  description?: string;
+  showBadge?: boolean;
+  badgeValue?: string;
+  config?: ChartConfig;
+}
+
+// 默认数据
+const defaultChartData: ChartDataItem[] = [
   { month: "January", desktop: 186, mobile: 92 },
   { month: "February", desktop: 305, mobile: 178 },
   { month: "March", desktop: 237, mobile: 145 },
@@ -31,7 +49,7 @@ const chartData = [
   { month: "December", desktop: 276, mobile: 172 },
 ];
 
-const chartConfig = {
+const defaultChartConfig = {
   desktop: {
     label: "Desktop",
     color: "var(--chart-1)",
@@ -42,27 +60,36 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function GlowingMultipleStrokeRadarChart() {
+export function GlowingMultipleStrokeRadarChart({
+  data = defaultChartData,
+  title = "Glowing Multiple Stroke",
+  description = "Showing total visitors for the last 6 months",
+  showBadge = true,
+  badgeValue = "5.2%",
+  config = defaultChartConfig,
+}: GlowingMultipleStrokeRadarChartProps) {
   return (
     <Card>
       <CardHeader className="items-center pb-4">
         <CardTitle>
-          Glowing Multiple Stroke
-          <span className="inline-flex items-center rounded-full border-none bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-500 ml-2">
-            <TrendingDown className="h-4 w-4" />
-            <span>5.2%</span>
-          </span>
+          {title}
+          {showBadge && (
+            <span className="inline-flex items-center rounded-full border-none bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-500 ml-2">
+              <TrendingDown className="h-4 w-4" />
+              <span>{badgeValue}</span>
+            </span>
+          )}
         </CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          {description}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={config}
           className="mx-auto aspect-square max-h-[250px]"
         >
-          <RadarChart data={chartData}>
+          <RadarChart data={data}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <PolarAngleAxis dataKey="month" />
             <PolarGrid strokeDasharray="3 3" />
