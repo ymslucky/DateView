@@ -21,12 +21,14 @@ export default function Home() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const res = await getKVData('radar');
 			try {
+				const res = await getKVData('radar');
 				setData(res);
 				setLoading(false);
 			} catch (err) {
+				console.error('Error fetching data:', err);
 				setError("获取数据失败，请稍后重试");
+				setData(fallbackData); // 使用备用数据
 				setLoading(false);
 			}
 		}
