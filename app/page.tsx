@@ -11,20 +11,21 @@ export default function Home() {
 
 	// 备用数据示例
 	const fallbackData: ChartDataItem[] = [
-		{ month: "一月", desktop: 220, mobile: 150 },
-		{ month: "二月", desktop: 180, mobile: 120 },
-		{ month: "三月", desktop: 300, mobile: 200 },
-		{ month: "四月", desktop: 250, mobile: 180 },
-		{ month: "五月", desktop: 280, mobile: 220 },
-		{ month: "六月", desktop: 320, mobile: 160 },
+		{ month: "小米", desktop: 220, mobile: 150 },
+		{ month: "三星", desktop: 180, mobile: 120 },
+		{ month: "TCL", desktop: 300, mobile: 200 },
 	];
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const res = await getKVData('radar');
-				setData(res);
+				// 如果返回的是字符串，需要解析为 JSON 数组
+				const parsedData = typeof res === 'string' ? JSON.parse(res) : res;
+				setData(parsedData);
 				setLoading(false);
+				console.log('原始数据:', res);
+				console.log('解析后数据:', parsedData);
 			} catch (err) {
 				console.error('Error fetching data:', err);
 				setError("获取数据失败，请稍后重试");
@@ -52,8 +53,8 @@ export default function Home() {
 			<div className="w-1/3 h-1/3 min-w-[300px] min-h-[300px] max-w-[600px] max-h-[600px]">
 				<GlowingMultipleStrokeRadarChart
 					data={data || fallbackData}
-					title="自定义数据雷达图"
-					description={error ? "展示备用数据（API 暂时不可用）" : "展示最近6个月的访问数据"}
+					title="各平台销售数据"
+					description={error ? "展示备用数据（API 暂时不可用）" : "最近6个月的访问数据"}
 					showBadge={true}
 					badgeValue="11.5%"
 				/>
