@@ -1,6 +1,7 @@
 'use client';
 
 import { GlowingMultipleStrokeRadarChart, ChartDataItem } from "@/components/ui/glowing-multiple-stroke-radar-chart";
+import { getKVData } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -20,22 +21,15 @@ export default function Home() {
 
 	useEffect(() => {
 		const fetchData = async () => {
+			const res = await getKVData('radar');
 			try {
-				setLoading(true);
-				const response = await fetch('https://date-view.edgeone.app:8088');
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const result = await response.json();
-				setData(result);
+				setData(res);
+				setLoading(false);
 			} catch (err) {
-				console.warn('Failed to fetch data from API, using fallback data:', err);
-				setError(err instanceof Error ? err.message : 'Unknown error');
-				setData(fallbackData);
-			} finally {
+				setError("获取数据失败，请稍后重试");
 				setLoading(false);
 			}
-		};
+		}
 
 		fetchData();
 	}, []);
